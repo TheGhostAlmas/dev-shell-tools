@@ -17,13 +17,35 @@ function serve_http() {
 # Clean Command History / Limpiar Historial
 # ------------------------------------------------------------------------------
 function clean_logs() {
-    # Clears shell history / Limpia el historial de comandos
-    # Usage: clean_logs / Uso: clean_logs
-    history -c
-    echo "" > ~/.bash_history
-    echo "[*] History cleaned. / Historial limpiado."
-}
+    # Limpiar historial en memoria para todas las shells posibles
+    history -c 2>/dev/null  # Bash
+    [ -n "$ZSH_VERSION" ] && history -p 2>/dev/null  # Zsh
 
+    # Limpiar todos los archivos de historial conocidos
+    echo "" > ~/.bash_history 2>/dev/null
+    echo "" > ~/.zsh_history 2>/dev/null
+    echo "" > ~/.fish_history 2>/dev/null
+    echo "" > ~/.local/share/fish/fish_history 2>/dev/null
+
+    # Forzar escritura inmediata (Bash)
+    [ -n "$BASH_VERSION" ] && history -w
+
+    # Limpiar historial en sistemas con HISTFILE diferente
+    local alt_hist=("${HISTFILE}" "${HISTFILE:-~/.bash_history}" \
+                   ~/.history "/tmp/history_${USER}" \
+                   ~/.local/share/bash/history/bash_history)
+    for file in "${alt_hist[@]}"; do
+        [ -f "$file" ] && echo "" > "$file"
+    done
+
+    # Mensaje con instrucciones claras
+    echo "[+] Historial limpiado completamente."
+    echo "[+] IMPORTANTE: Cierra TODAS tus terminales ahora mismo."
+    echo "[+] Abre una nueva terminal y verás el historial limpio."
+
+    # Opcional: Matar todas las terminales (cuidado, esto cerrará tus terminales)
+    # pkill -9 -f "terminal" 2>/dev/null || true
+}
 # ------------------------------------------------------------------------------
 # Fast Git Clone / Clonación Rápida de Git
 # ------------------------------------------------------------------------------
