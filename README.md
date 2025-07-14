@@ -76,13 +76,13 @@ echo $SHELL
 
 ```bash
 # Ejemplo:
-source /ruta/a/shell-functions.sh
+sudo nano /home/usuario/.zshrc (usuario cambiarlo por usuario propio ejemplo ghost) 
 ```
 
 3. **Recarga tu configuración:**
 
-```bash
-source ~/.bashrc   # o source ~/.zshrc
+```
+Reiniciamos nuestro equipo o maquina
 ```
 
 ---
